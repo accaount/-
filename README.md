@@ -514,240 +514,255 @@ system("pause");
 15. Вычислить произведение элементов массива, расположенные между первым и
 последним отрицательным элементом.
 #include <iostream>
+#include <stdio.h>
 using namespace std;
-void filling(int const &N, int &ifirst, int &isecond, int *A)
+
+#define N 5
+
+void function(int a[N])
 {
-for (int i = 0; i < N; i++)
-{
-cin >> A[i];
-if (A[i] < 0 & ifirst == -1)
-ifirst = i; //Запоминаем индекс от крайнего слева отрицательного
-if (A[i] < 0)
-isecond = i; //Запоминаем индекс от крайнего справа отрицательного
+	int otr1, otr2, pr = 1, sum = 0;
+	for (int i = 0; i < N; i++)
+		if (a[i] < 0)sum++; //проверка что отрицательных минимум 2
+	if (sum > 1) {
+		for (int i = 0; i < N; i++)
+		{
+			if (a[i] < 0) { otr1 = i; break; } //поиск первого отрицательного
+		}
+		for (int i = N - 1; i >= 0; i--)
+		{
+			if (a[i] < 0) { otr2 = i; break; } //поиск второго отрицательного
+		}
+		for (int i = otr1 + 1; i < otr2; i++)
+			pr *= a[i]; //подсчет произведения
+		printf("Произведение:%d ", pr);
+	}
+	else printf("Отрицательных чисел меньше двух");
 }
-}
-int operation(int &ifirst, int &isecond, int *A)
-{
-int s = 1;
-if (ifirst < isecond) //Если номер первого индекса меньше второго, то считаем
-следующим циклом:
-for (ifirst++; ifirst < isecond; ifirst++)
-s *= A[ifirst]; //Считаем произведение
-else //Если номер второго индекса меньше первого, то считаем следующим циклом:
-for (isecond++; isecond < ifirst; isecond++)
-s *= A[isecond]; //Считаем произведение
-return s; //Выводим произведение
-}
+
 int main()
 {
-int N, iplus = -1, isecond = 0;
-int A[255] = {0};
-cin >> N;
-filling(N, iplus, isecond, A);
-cout << operation(iplus, isecond, A) << endl;
-system("pause");
+	setlocale(LC_ALL, "Russian");
+	int a[N];
+	printf("Введите массив");
+	for (int i = 0; i < N; i++)
+	scanf_s("%d",&a[i]);
+	function(a);
+	system("pause");
+	return 0;
 }
 16. Ввести с клавиатуры строку. Определить наибольшее число подряд идущих
 пробелов
 #include <iostream>
 #include <cstring>
+#include <string.h>
 using namespace std;
-int operation(char *s)
+int operation(char* s)
 {
-int count = 0, max = 0;
-for (int i = 0; i < strlen(s); i++)
-{
-if (s[i] == ' ') count++; //Если элемент строки равен пробелу, то прибавляем к
-счётчику единичку
-else //Если встретилось слово
-{
-if (count > max) //Сравниваем количество пробелов перед словом с
-максимальным количеством
-{
-max = count;
-count = 0; //Обнуляем счётчик для подсчёта следующих пробелов
-}
-}
-}
-return max; //Выводим максимальное количество подряд идущих пробелов
+	int count = 0, max = 0;
+	for (int i = 0; i < strlen(s); i++)
+	{
+		if (s[i] == ' ') count++; //Если элемент строки равен пробелу, то прибавляем к счётчику единичку
+		else //Если встретилось слово
+		{
+			if (count > max) //Сравниваем количество пробелов перед словом смаксимальным количеством
+			{
+			max = count;
+			count = 0; //Обнуляем счётчик для подсчёта следующих пробелов
+			}
+		}
+	}
+	return max; //Выводим максимальное количество подряд идущих пробелов
 }
 int main()
 {
-char s[250] = {0};
-gets(s);
-cout << operation(s) << endl;
-system("pause");
+	char s[250] = { 0 };
+	gets_s(s);
+	printf("%d",operation(s));
+	system("pause");
 }
 17. Посчитать количество символов в строке между самыми длинным и самым
 коротким словом
 #include <iostream>
 #include <cstring>
+#include <string.h>
 using namespace std;
-void operation(char *s)
+void operation(char* s)
 {
-int word = 0, min = 255, max = 0, imin, imax, j1, j2, count = 0;
-for (int i = 0; i <= strlen(s); i++) //Пробегаем через всю строку (включая
-нуль-терминатор)
+	int word = 0, min = 255, max = 0, imin, imax, j1, j2, count = 0;
+	for (int i = 0; i <= strlen(s); i++) //Пробегаем через всю строку (включаянуль - терминатор)
 {
-if ((s[i] == '\0') && (word == 0)) //Если встретили нуль-терминатор и проделали все
-операции (word = 0), то выходим из цикла
+if ((s[i] == '\0') && (word == 0)) //Если встретили нуль-терминатор и проделали всоперации(word = 0), то выходим из цикла
 break;
 else if ((s[i] != ' ') && (s[i] != '\0')) //Считаем количество букв в слове
 word++;
 else
 {
-if (word > max)
-{
-max = word; //Запоминаем количество букв самого длинного слова
-imax = i; //Запоминаем индекс пробела, идущего после последней буквы
-этого слова
-}
-if (word < min)
-{
-min = word; //Запоминаем количество букв самого короткого слова
-imin = i; //Запоминаем индекс пробела, идущего после последней буквы этого
-слова
-}
-word = 0; //Переходим к другому слову, обнуляем количество букв
+	if (word > max)
+	{
+		max = word; //Запоминаем количество букв самого длинного слова
+		imax = i; //Запоминаем индекс пробела, идущего после последней буквыэтого слова
+	}
+	if (word < min)
+	{
+		min = word; //Запоминаем количество букв самого короткого слова
+		imin = i; //Запоминаем индекс пробела, идущего после последней буквы этогослова
+	}
+	word = 0; //Переходим к другому слову, обнуляем количество букв
 }
 }
-if (imax > imin) //Если длинное слова стоит впереди и короткого
-{
-j2 = (imax - max); //Запоминаем индекс первой буквы длинного слова
-j1 = imin; //Запоминаем индекс пробела, идущего после последней буквы
-короткого слова
-}
-else
-{
-j2 = (imin - min); //Запоминаем индекс первой буквы короткого слова
-j1 = imax; //Запоминаем индекс пробела, идущего после последней буквы
-длинного слова
-}
-cout << j2 - j1 << endl; //Считаем количество символом с помощью разности
+	if (imax > imin) //Если длинное слова стоит впереди и короткого
+	{
+		j2 = (imax - max); //Запоминаем индекс первой буквы длинного слова
+		j1 = imin; //Запоминаем индекс пробела, идущего после последней буквыкороткого слова
+	}
+	else
+	{
+		j2 = (imin - min); //Запоминаем индекс первой буквы короткого слова
+		j1 = imax; //Запоминаем индекс пробела, идущего после последней буквыдлинного слова
+	}
+	printf("%d", j2 - j1); //Считаем количество символом с помощью разности
 }
 int main()
 {
-char s[255] = {0};
-gets(s);
-operation(s);
-system("pause");
+	char s[255] = { 0 };
+	gets_s(s);
+	operation(s);
+	system("pause");
 }
 18. Найти наиболее часто встречающиеся число, если их несколько, то наименьшее из
 них.
 #include <iostream>
+#include <stdio.h>
+#define _CRT_SECURE_NO_WARNINGS
 using namespace std;
-void operation(int &N, int *A)
-{
-int min = INT_MAX; //Приравниваем минимальное значение к
-максимально-возможному
-int count1 = 0; //Максимальное количество совпадений
-for (int i = 0; i < N; i++) cin >> A[i]; //Считываем массив
-for (int i = 0; i < N - 1; i++)
-{
-int count2 = 0; //Обнуляем количество совпадений
-for (int j = i + 1; j < N; j++) //Прогоняем весь массив
-if (A[j] == A[i])
-count2 += 1; //Если число совпало, то к счётчику прибавляем единичку
-if (count2 > count1 || count1 == count2 && A[i] < min) //Если данное количество
-больше максимального количества совпадений либо, если количества совпадений
-равны, но данное число меньше минимального
-{
-count1 = count2; //Максимальное количество совпадений равно данному
-количеству
-min = A[i]; //Минимальное число равно данному числу
-}
-}
-cout << min << endl; //Выводим количество
+
+#define N 10
+
+void AFA() {
+	int mass[N];
+	//заполняем массив случайными значениями от 0 до 99
+	printf("Введите массив состоящий из значениями от 0 до 99 ");
+	for (int i = 0; i < N; i++)
+	{
+		scanf_s("%d", &mass[i]);
+	}
+	printf("Введенный массив:");
+	for (int i = 0; i < N; i++)
+	{
+		printf("%d", mass[i], " ");
+	}
+	int maxcount(1), nn(-1);
+	for (int i = 0; i < N; i++)//перебираем все элементы массива
+	{
+		int count(0);
+		for (int j = i; j < N; j++) //перебираем все элементы от i до конца
+		//если элемент i совпадает с одним из последующих (j), то увеличиваем число
+			if (mass[i] == mass[j])
+				count++;
+		if (maxcount < count)//если число больше ранее сохраненного - перезаписываем
+		{
+			maxcount = count;
+			nn = i;
+		}
+	}
+	printf("\n"); //выводим
+	if (nn > -1) //значение
+	{
+		printf("Часто повторяющееся: ");
+		printf("%d", mass[nn]);
+	}
+	else //или то, что повторяющихся элементов нет
+		printf("Повторяющихся элементов нет");
 }
 int main()
 {
-int N;
-int *A;
-cin >> N;
-A = new int [N];
-operation(N, A);
-system("pause");
+	setlocale(LC_ALL, "rus");
+	AFA();
+	system("pause");
 }
 19. В массиве A, начиная с позиции k, удалить m элементов
 #include <iostream>
 using namespace std;
 void _filling(int k1, int A[])
 {
-for (int i = 0; i < k1; i++)
-{
-cout << "[" << i << "]" << ": ";
-cin >> A[i];
-}
+	for (int i = 0; i < k1; i++)
+	{
+		printf("[", i, "]" , ": ");
+		scanf_s(A[i]);
+	}
 }
 void _operation(int k1, int k, int m, int A[])
 {
-for (int i = 0; i < m; i++) A[k - 1 + i] = 0;
-for (int i = 0; i < (k1 - m); i++) A[k - 1 + i] = A[k - 1 + i + m];
+	for (int i = 0; i < m; i++) A[k - 1 + i] = 0;
+	for (int i = 0; i < (k1 - m); i++) A[k - 1 + i] = A[k - 1 + i + m];
 }
 int main()
 {
-setlocale(LC_ALL, "rus");
-int A[255] = {0};
-int k, m, k1;
-cout << "Введите размер массива A: ";
-cin >> k1;
-_filling(k1, A);
-cout << "Введите значения k, m: ";
-cin >> k >> m;
-_operation(k1, k, m, A);
-cout << "Массив A:" << endl;
-for (int i = 0; i < (k1 - m); i++) cout << A[i] << " ";
-system("pause");
+	setlocale(LC_ALL, "rus");
+	int A[255] = { 0 };
+	int k, m, k1;
+	printf("Введите размер массива A: ");
+	scanf_s("%d",k1);
+	_filling(k1, A);
+	printf("Введите значения k, m: ");
+	scanf_s("%d%d",k, m);
+	_operation(k1, k, m, A);
+	printf("Массив A:");
+	for (int i = 0; i < (k1 - m); i++) printf(A[i], " ");
+	system("pause");
 }
 20. В массиве A, начиная с позиции k, вставить подряд m элементов из массива B,
 начинающихся с позиции n.
 #include <iostream>
+#include <stdio.h>
+#define _CRT_SECURE_NO_WARNINGS
 using namespace std;
 void _filling(int k1, int m1, int A[], int B[])
 {
-for (int i = 0; i < k1; i++)
-{
-cout << "[" << i << "]"
-<< ": ";
-cin >> A[i];
-}
-for (int i = 0; i < m1; i++)
-{
-cout << "[" << i << "]"
-<< ": ";
-cin >> B[i];
-}
+	for (int i = 0; i < k1; i++)
+	{
+		printf("%d",i);
+		scanf_s("%d",A[i]);
+	}
+	for (int i = 0; i < m1; i++)
+	{
+		printf(i);
+		scanf_s("%d",B[i]);
+	}
 }
 void _operation(int k1, int m1, int k, int m, int n, int A[], int B[])
 {
-for (int i = 1; i <= (k1 - k); i++) A[k1 + m - i] = A[k1 - i];
-for (int i = 0; i < m; i++) A[k + i] = B[n - 1 + i];
+	for (int i = 1; i <= (k1 - k); i++) A[k1 + m - i] = A[k1 - i];
+	for (int i = 0; i < m; i++) A[k + i] = B[n - 1 + i];
 }
 int main()
 {
-setlocale(LC_ALL, "rus");
-int A[255] = {0};
-int B[255] = {0};
-int k, m, n, k1, m1;
-cout << "Введите размер массива A: ";
-cin >> k1;
-cout << "Введите размер массива B: ";
-cin >> m1;
-_filling(k1, m1, A, B);
-cout << "Введите значения k, m, n: ";
-cin >> k >> m >> n;
-_operation(k1, m1, k, m, n, A, B);
-cout << "Массив A:" << endl;
-for (int i = 0; i < k1 + m; i++) cout << A[i] << " ";
-return 0;
+	setlocale(LC_ALL, "rus");
+	int A[255] = { 0 };
+	int B[255] = { 0 };
+	int k, m, n, k1, m1;
+	printf("Введите размер массива A: ");
+	scanf_s("%d", k1);
+	printf("Введите размер массива B: ");
+	scanf_s("%d", m1);
+	_filling(k1, m1, A, B);
+	printf("Введите значения k, m, n: ");
+	scanf_s("%d%d%d", k, m, n);
+	_operation(k1, m1, k, m, n, A, B);
+	printf("Массив A:");
+	for (int i = 0; i < k1 + m; i++) printf(' ', A[i]);
+	return 0;
 }
 21. Убрать все лишние пробелы из строки.
 #include <iostream>
 #include <cstring>
+#include <stdio.h>
+#include <string.h>
 int main()
 {
 char s[250];
-gets(s);
+gets_s(s);
 while (s[0] == ' ')
 for (int i = 0; i < strlen(s); i++)
 s[i] = s[i + 1];
