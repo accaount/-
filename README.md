@@ -389,6 +389,373 @@ int main()
 
 11. Дан целочисленный массив размера N. Посчитать чередуются ли в нем четные и нечетные числа. Если чередуются, то вывести 0, если нет, то порядковый номер элемента, нарушающего закономерность.
 
-
+#include <iostream>
+using namespace std;
+int operation(int &N, int *A)
+{
+int s = 0;
+bool flag; //Создаём флаг для определения какой элемент был предыдущим
+for (int i = 0; i < N; i++) cin >> A[i]; //Заполняем массив
+A[0] % 2 ? flag = true : flag = false; //Смотрим, является ли чётным самое первое
+число
+for (int i = 0; i < N; i++)
+{
+if (!(A[i] % 2) && !flag) flag = true; //Если A[i] чётное и флаг был нечётным, то флаг
+меняем на чётное
+else if (A[i] % 2 && flag) flag = false; //Если A[i] нечётное и флаг был чётным, то
+флаг меняем на нечётное
+else //Иной случай говорит нам о том, что чередование нарушено
+{
+s = i + 1; //Нужно найти порядковый номер, поэтому к индексу добавляем 1
+break; //Выходим из цикла, так как мы нашли элемент, нарушающий
+чередование
+}
+}
+return s; //Выводим порядковый номер
+}
+int main()
+{
+int N;
+int *A;
+cin >> N;
+A = new int [N];
+cout << operation(N, A) << endl;
+system("pause");
+}
+12. Ввести с клавиатуры строку. Определить количество слов, в которых ни одна буква
+не повторяется.
+#include <iostream>
+#include <cstring>
+using namespace std;
+bool unique(char *s, int const &i, int const &word)
+{
+for (int k = i - word; k < i - 1; k++) //Прогоняем слово начиная от первой буквы и
+заканчивая предпоследней
+for (int l = k + 1; l < i; l++) //Прогоняем со второй буквы, заканчивая последней
+if (s[k] == s[l]) //Если есть совпадения, то немедленно возвращаем ложь
+return false;
+return true; //Если совпадений не было, то возвращаем истину
+}
+void operation(char *s)
+{
+int word = 0;
+int count = 0;
+for (int i = 0; i <= strlen(s); i++) //Пробегаем через всю строку (включая
+нуль-терминатор)
+{
+if ((s[i] == '\0') && (word == 0)) //Если встретили нуль-терминатор и проделали все
+операции (word = 0), то выходим из цикла
+break;
+else if ((s[i] != ' ') && (s[i] != '\0')) //Считаем количество букв в слове
+word++;
+else
+{
+if (unique(s, i, word)) count += 1; //Проверяем, не повторяются ли в слове буквы,
+если нет, то добавляем к счётчику единицу
+word = 0; //Переходим к другому слову, обнуляем количество букв
+}
+}
+cout << count << endl; //Выводим количество
+}
+int main()
+{
+char s[255] = {0};
+gets(s);
+operation(s);
+system("pause");
+}
+13. Ввести с клавиатуры строку, состоящую из слов, разделенных пробелов, точкой и
+запятой. Если в словах встречается окончание ing, заменить его на ed.
+#include <iostream>
+#include <cstring>
+using namespace std;
+void operation(char *s)
+{
+for (int i = 0; i <= strlen(s); i++) //Пробегаем через всю строку (включая
+нуль-терминатор)
+{
+if (s[i - 1] == 'g' && s[i - 2] == 'n' && s[i - 3] == 'i') //Если слово оканчивается на ing
+{
+for (int k = i - 1; k < strlen(s); k++) s[k] = s[k + 1]; //То сдвигаем массив влево на
+один элемент
+s[i - 2] = 'd'; //Последние две буквы меняем на нужное окончание
+s[i - 3] = 'e';
+}
+}
+}
+int main()
+{
+char s[255] = {0};
+gets(s);
+operation(s);
+puts(s);
+system("pause");
+}
+14. Даны 2 целых и положительных числа А и В. Написать программу, которая
+выводит сумму чисел между А и В, причем каждое число выводится столько раз,
+сколько значению оно равно (например число 3 выводится 3 раза).
+#include <iostream>
+using namespace std;
+void operation(int &A, int &B)
+{
+if (B < A) A = A + B - (B = A); //Если B < A, то меняем их мистами, путём нехитрой
+замены
+int s = 0;
+for (int i = A + 1; i < B; i++) s+= i; //Находим сумму элементов между A и B
+for (int i = 0; i < s; i++) cout << s << " "; //Выводим сумму
+}
+int main()
+{
+int A, B; //Вводим два числа через пробел
+cin >> A >> B;
+operation(A, B);
+system("pause");
+}
+15. Вычислить произведение элементов массива, расположенные между первым и
+последним отрицательным элементом.
+#include <iostream>
+using namespace std;
+void filling(int const &N, int &ifirst, int &isecond, int *A)
+{
+for (int i = 0; i < N; i++)
+{
+cin >> A[i];
+if (A[i] < 0 & ifirst == -1)
+ifirst = i; //Запоминаем индекс от крайнего слева отрицательного
+if (A[i] < 0)
+isecond = i; //Запоминаем индекс от крайнего справа отрицательного
+}
+}
+int operation(int &ifirst, int &isecond, int *A)
+{
+int s = 1;
+if (ifirst < isecond) //Если номер первого индекса меньше второго, то считаем
+следующим циклом:
+for (ifirst++; ifirst < isecond; ifirst++)
+s *= A[ifirst]; //Считаем произведение
+else //Если номер второго индекса меньше первого, то считаем следующим циклом:
+for (isecond++; isecond < ifirst; isecond++)
+s *= A[isecond]; //Считаем произведение
+return s; //Выводим произведение
+}
+int main()
+{
+int N, iplus = -1, isecond = 0;
+int A[255] = {0};
+cin >> N;
+filling(N, iplus, isecond, A);
+cout << operation(iplus, isecond, A) << endl;
+system("pause");
+}
+16. Ввести с клавиатуры строку. Определить наибольшее число подряд идущих
+пробелов
+#include <iostream>
+#include <cstring>
+using namespace std;
+int operation(char *s)
+{
+int count = 0, max = 0;
+for (int i = 0; i < strlen(s); i++)
+{
+if (s[i] == ' ') count++; //Если элемент строки равен пробелу, то прибавляем к
+счётчику единичку
+else //Если встретилось слово
+{
+if (count > max) //Сравниваем количество пробелов перед словом с
+максимальным количеством
+{
+max = count;
+count = 0; //Обнуляем счётчик для подсчёта следующих пробелов
+}
+}
+}
+return max; //Выводим максимальное количество подряд идущих пробелов
+}
+int main()
+{
+char s[250] = {0};
+gets(s);
+cout << operation(s) << endl;
+system("pause");
+}
+17. Посчитать количество символов в строке между самыми длинным и самым
+коротким словом
+#include <iostream>
+#include <cstring>
+using namespace std;
+void operation(char *s)
+{
+int word = 0, min = 255, max = 0, imin, imax, j1, j2, count = 0;
+for (int i = 0; i <= strlen(s); i++) //Пробегаем через всю строку (включая
+нуль-терминатор)
+{
+if ((s[i] == '\0') && (word == 0)) //Если встретили нуль-терминатор и проделали все
+операции (word = 0), то выходим из цикла
+break;
+else if ((s[i] != ' ') && (s[i] != '\0')) //Считаем количество букв в слове
+word++;
+else
+{
+if (word > max)
+{
+max = word; //Запоминаем количество букв самого длинного слова
+imax = i; //Запоминаем индекс пробела, идущего после последней буквы
+этого слова
+}
+if (word < min)
+{
+min = word; //Запоминаем количество букв самого короткого слова
+imin = i; //Запоминаем индекс пробела, идущего после последней буквы этого
+слова
+}
+word = 0; //Переходим к другому слову, обнуляем количество букв
+}
+}
+if (imax > imin) //Если длинное слова стоит впереди и короткого
+{
+j2 = (imax - max); //Запоминаем индекс первой буквы длинного слова
+j1 = imin; //Запоминаем индекс пробела, идущего после последней буквы
+короткого слова
+}
+else
+{
+j2 = (imin - min); //Запоминаем индекс первой буквы короткого слова
+j1 = imax; //Запоминаем индекс пробела, идущего после последней буквы
+длинного слова
+}
+cout << j2 - j1 << endl; //Считаем количество символом с помощью разности
+}
+int main()
+{
+char s[255] = {0};
+gets(s);
+operation(s);
+system("pause");
+}
+18. Найти наиболее часто встречающиеся число, если их несколько, то наименьшее из
+них.
+#include <iostream>
+using namespace std;
+void operation(int &N, int *A)
+{
+int min = INT_MAX; //Приравниваем минимальное значение к
+максимально-возможному
+int count1 = 0; //Максимальное количество совпадений
+for (int i = 0; i < N; i++) cin >> A[i]; //Считываем массив
+for (int i = 0; i < N - 1; i++)
+{
+int count2 = 0; //Обнуляем количество совпадений
+for (int j = i + 1; j < N; j++) //Прогоняем весь массив
+if (A[j] == A[i])
+count2 += 1; //Если число совпало, то к счётчику прибавляем единичку
+if (count2 > count1 || count1 == count2 && A[i] < min) //Если данное количество
+больше максимального количества совпадений либо, если количества совпадений
+равны, но данное число меньше минимального
+{
+count1 = count2; //Максимальное количество совпадений равно данному
+количеству
+min = A[i]; //Минимальное число равно данному числу
+}
+}
+cout << min << endl; //Выводим количество
+}
+int main()
+{
+int N;
+int *A;
+cin >> N;
+A = new int [N];
+operation(N, A);
+system("pause");
+}
+19. В массиве A, начиная с позиции k, удалить m элементов
+#include <iostream>
+using namespace std;
+void _filling(int k1, int A[])
+{
+for (int i = 0; i < k1; i++)
+{
+cout << "[" << i << "]" << ": ";
+cin >> A[i];
+}
+}
+void _operation(int k1, int k, int m, int A[])
+{
+for (int i = 0; i < m; i++) A[k - 1 + i] = 0;
+for (int i = 0; i < (k1 - m); i++) A[k - 1 + i] = A[k - 1 + i + m];
+}
+int main()
+{
+setlocale(LC_ALL, "rus");
+int A[255] = {0};
+int k, m, k1;
+cout << "Введите размер массива A: ";
+cin >> k1;
+_filling(k1, A);
+cout << "Введите значения k, m: ";
+cin >> k >> m;
+_operation(k1, k, m, A);
+cout << "Массив A:" << endl;
+for (int i = 0; i < (k1 - m); i++) cout << A[i] << " ";
+system("pause");
+}
+20. В массиве A, начиная с позиции k, вставить подряд m элементов из массива B,
+начинающихся с позиции n.
+#include <iostream>
+using namespace std;
+void _filling(int k1, int m1, int A[], int B[])
+{
+for (int i = 0; i < k1; i++)
+{
+cout << "[" << i << "]"
+<< ": ";
+cin >> A[i];
+}
+for (int i = 0; i < m1; i++)
+{
+cout << "[" << i << "]"
+<< ": ";
+cin >> B[i];
+}
+}
+void _operation(int k1, int m1, int k, int m, int n, int A[], int B[])
+{
+for (int i = 1; i <= (k1 - k); i++) A[k1 + m - i] = A[k1 - i];
+for (int i = 0; i < m; i++) A[k + i] = B[n - 1 + i];
+}
+int main()
+{
+setlocale(LC_ALL, "rus");
+int A[255] = {0};
+int B[255] = {0};
+int k, m, n, k1, m1;
+cout << "Введите размер массива A: ";
+cin >> k1;
+cout << "Введите размер массива B: ";
+cin >> m1;
+_filling(k1, m1, A, B);
+cout << "Введите значения k, m, n: ";
+cin >> k >> m >> n;
+_operation(k1, m1, k, m, n, A, B);
+cout << "Массив A:" << endl;
+for (int i = 0; i < k1 + m; i++) cout << A[i] << " ";
+return 0;
+}
+21. Убрать все лишние пробелы из строки.
+#include <iostream>
+#include <cstring>
+int main()
+{
+char s[250];
+gets(s);
+while (s[0] == ' ')
+for (int i = 0; i < strlen(s); i++)
+s[i] = s[i + 1];
+for (int i = strlen(s); i > 0; --i)
+if ((s[i] == ' ') && (s[i - 1] == ' '))
+for (int j = i; j < strlen(s); j++)
+s[j] = s[j + 1];
+puts(s);
+}
 
 
